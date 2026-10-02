@@ -5,15 +5,18 @@ Customized version of FlexUnits.jl for pressure vessel development.
 """
 module VesselUnits
 
-import FlexUnits: set_preferred_unit, simplify, display_simplified_units
-
 # Export names from this package
 export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, MPa, kPa, bar, atm
 export STEEL_DENSITY
+
+# Export names from FlexUnits
 export simplify, set_preferred_unit
 
-# Export common macros and functions from internal registry (this package is opinionated)
-export @u_str, @ud_str, @q_str, @D_str, uparse, qparse, register_unit
+# Export names from InternalRegistry (Currently: @u_str, @ud_str, @q_str, @U_str, @D_str, uparse, qparse, register_unit)
+export @u_str, @ud_str, @q_str, @U_str, @D_str, uparse, qparse, register_unit
+
+# Load functions and module from FlexUnits.jl
+using FlexUnits: FlexUnits, set_preferred_unit, display_simplified_units, simplify
 
 # Build internal unit registry with default settings
 module InternalRegistry
@@ -29,7 +32,7 @@ module InternalRegistry
     register_unit!(UNITS, "atm" => 101.325 * UNITS[:kPa])
     register_unit!(UNITS, "mph" => UNITS[:mi] / UNITS[:hr])
 
-    # Define preferred units
+    # Set default preferred units
     const PREFERRED_UNITS = [UNITS[u] for u in [:F, :H, :T, :Ω, :V, :W, :J, :Pa, :N, :C, :L]]
 
     # Generate simplifiers and exports for defined units with included macros
@@ -57,15 +60,15 @@ const kPa = u"kPa"   # Alternate Metric Pressure
 const bar = u"bar"   # Alternate Metric Pressure
 const atm = u"atm"   # Alternate Metric Pressure
 
-# Define important constants in namespace
+# Define selected constants in namespace
 const STEEL_DENSITY = 0.28lb/inch^3;
 
-# Set preferred units for simplification and turn unit simplification on at startup
+# Set preferred units for simplification and turn on automatic simplification when package is loaded
 function __init__()
     set_preferred_unit(inch)
     set_preferred_unit(lb)
     set_preferred_unit(lbf)
-    set_preferred_unit(Ra)  # Too dangerous to leave on °F. Temperature differences will be wrong.
+    set_preferred_unit(Ra)  # Using °F would cause errors for temperature differences. See https://github.com/Deduction42/FlexUnits.jl/issues/117#issuecomment-5901423556
     set_preferred_unit(ksi)
     set_preferred_unit(lb/inch^3)
 
