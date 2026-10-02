@@ -18,4 +18,6 @@ using Test
     @test string(3lbf / 1inch^2) == "0.003 ksi"
     @test string(STEEL_DENSITY * 1inch^3) == "0.28 lb"
     @test string(5lb / 2inch^3) == "2.5 lb/inch^3"
+    @test string(300MPa) == "43.51132131906277 ksi"
+    @test string(25.4mm) == "1.0 inch"
 end
