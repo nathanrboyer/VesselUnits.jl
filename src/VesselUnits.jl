@@ -5,21 +5,16 @@ Customized version of FlexUnits.jl for pressure vessel development.
 """
 module VesselUnits
 
-# Export names from this package
+# Export constants from this package
 export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, MPa, kPa, bar, atm
 export STEEL_DENSITY
 
-# Export names from FlexUnits
-export simplify, set_preferred_unit
-
-# Export names from InternalRegistry (Currently: @u_str, @ud_str, @q_str, @U_str, @D_str, uparse, qparse, register_unit)
-export @u_str, @ud_str, @q_str, @U_str, @D_str, uparse, qparse, register_unit
-
-# Load functions and module from FlexUnits.jl
-using FlexUnits: FlexUnits, set_preferred_unit, display_simplified_units, simplify
+# Load and reexport names from FlexUnits.jl
+using Reexport
+@reexport using FlexUnits
 
 # Build internal unit registry with default settings
-module InternalRegistry
+module VesselUnitsRegistry
     using FlexUnits.RegistryTools
 
     # Define the unit registry as an empty dictionary
@@ -40,8 +35,8 @@ module InternalRegistry
     @generate_registry_exports(UNITS)
 end
 
-# Ensure the internal package is "used"
-using .InternalRegistry
+# Load and reexport names from unit registry
+@reexport using .VesselUnitsRegistry
 
 # Define selected units in namespace
 const inch = u"inch" # Imperial Length
@@ -61,7 +56,7 @@ const bar = u"bar"   # Alternate Metric Pressure
 const atm = u"atm"   # Alternate Metric Pressure
 
 # Define selected constants in namespace
-const STEEL_DENSITY = 0.28lb/inch^3;
+const STEEL_DENSITY = 0.28lb/inch^3
 
 # Set preferred units for simplification and turn on automatic simplification when package is loaded
 function __init__()
@@ -70,9 +65,9 @@ function __init__()
     set_preferred_unit(lbf)
     set_preferred_unit(Ra)  # Using °F would cause errors for temperature differences. See https://github.com/Deduction42/FlexUnits.jl/issues/117#issuecomment-5901423556
     set_preferred_unit(ksi)
-    set_preferred_unit(lb/inch^3)
+    set_preferred_unit(u"lb/inch^3")
 
-    display_simplified_units(true)  # Always convert to simple preferred units
+    display_simplified_units(true)
 end
 
 end  # module
