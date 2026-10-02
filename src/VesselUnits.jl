@@ -6,7 +6,7 @@ Customized version of FlexUnits.jl for pressure vessel development.
 module VesselUnits
 
 # Export names from this package
-export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, MPa, kPa, bar, atm
+export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, kPa, MPa, bar, atm
 export STEEL_DENSITY
 
 # Load dependencies
@@ -17,6 +17,7 @@ Unitful.register(VesselUnits)
 # Define new units
 @unit kip "kip" Kip 1000*u"lbf" false
 @unit ksi "ksi" KSI 1*u"kip"/(1*u"inch^2") false
+@unit mph "mph" MPH 1*u"mi"/(1*u"hr") false
 
 # Define selected units in namespace
 const inch = u"inch" # Imperial Length
@@ -26,7 +27,6 @@ const kg = u"kg"     # Metric Mass
 const lbf = u"lbf"   # Imperial Force
 # N is too common    # Metric Force
 const °F = u"°F"     # Imperial Temperature
-const Ra = u"Ra"     # Alternate Imperial Temperature
 const °C = u"°C"     # Metric Temperature
 const psi = u"psi"   # Imperial Pressure
 const ksi = u"ksi"   # Alternate Imperial Pressure
