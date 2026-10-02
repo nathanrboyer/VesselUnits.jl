@@ -62,6 +62,7 @@ const localpromotion = copy(Unitful.promotion)
 function __init__()
     Unitful.register(VesselUnits)
     merge!(Unitful.promotion, localpromotion)
+    ENV["UNITFUL_FANCY_EXPONENTS"] = false  # Superscript exponents may be too small to read, so not enabled by default. You can change this at runtime though.
 end
 
 end  # module
