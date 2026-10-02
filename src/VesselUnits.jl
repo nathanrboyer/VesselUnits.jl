@@ -6,28 +6,17 @@ Customized version of FlexUnits.jl for pressure vessel development.
 module VesselUnits
 
 # Export names from this package
-export inch, mm, lb, kg, lbf, °F, °C, psi, MPa, kPa, bar, atm
+export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, MPa, kPa, bar, atm
 export STEEL_DENSITY
-export simplify, set_preferred_unit
 
 # Load dependencies
-using FlexUnits.RegistryTools
-using FlexUnits: set_preferred_unit, display_simplified_units, simplify
+using Reexport
+@reexport using Unitful
+Unitful.register(VesselUnits)
 
-# Define the unit registry as an empty dictionary
-const UNITS = PermanentDict{Symbol,Units{Dimensions{FixRat32},AffineTransform{Float64}}}()
-
-# Add default units and register new ones to UNITS dictionary
-registry_defaults!(UNITS)
-register_unit!(UNITS, "atm" => 101.325 * UNITS[:kPa])
-
-# Define preferred units
-const PREFERRED_UNITS = [UNITS[u] for u in [:F, :H, :T, :Ω, :V, :W, :J, :Pa, :N, :C, :L]]
-# const PREFERRED_UNITS = [UNITS[u] for u in [:inch, :lb, :lbf, :Ra, :psi]]
-
-# Generate simplifiers and exports for defined units with included macros
-@generate_unit_simplifier(PREFERRED_UNITS)
-@generate_registry_exports(UNITS)
+# Define new units
+@unit kip "kip" Kip 1000*u"lbf" false
+@unit ksi "ksi" KSI 1*u"kip"/(1*u"inch^2") false
 
 # Define selected units in namespace
 const inch = u"inch" # Imperial Length
@@ -40,22 +29,39 @@ const °F = u"°F"     # Imperial Temperature
 const Ra = u"Ra"     # Alternate Imperial Temperature
 const °C = u"°C"     # Metric Temperature
 const psi = u"psi"   # Imperial Pressure
+const ksi = u"ksi"   # Alternate Imperial Pressure
 const MPa = u"MPa"   # Metric Pressure
 const kPa = u"kPa"   # Alternate Metric Pressure
 const bar = u"bar"   # Alternate Metric Pressure
 const atm = u"atm"   # Alternate Metric Pressure
 
 # Define important constants in namespace
-const STEEL_DENSITY = 0.28lb/inch^3;
+const STEEL_DENSITY = 0.28lb/inch^3
 
 # Set preferred units for simplification
-set_preferred_unit(inch)
-set_preferred_unit(lb)
-set_preferred_unit(lbf)
-set_preferred_unit(Ra)  # Too dangerous to leave on °F. Temperature differences will be wrong.
-set_preferred_unit(psi)
-set_preferred_unit(lb/inch^3)
+Unitful.preferunits(u"inch")
+Unitful.preferunits(u"lb")
+Unitful.preferunits(u"Ra")
 
-display_simplified_units(true)  # Always convert to simple preferred units
+# Derived Dimensions
+@derived_dimension Area Unitful.𝐋^2
+@derived_dimension Volume Unitful.𝐋^3
+@derived_dimension Density Unitful.𝐋*Unitful.𝐌*Unitful.𝐓^-2*Unitful.𝐋^-3
+@derived_dimension Force Unitful.𝐋*Unitful.𝐌*Unitful.𝐓^-2
+@derived_dimension Moment Unitful.𝐋^2*Unitful.𝐌*Unitful.𝐓^-2
+@derived_dimension Stress Unitful.𝐋*Unitful.𝐌*Unitful.𝐓^-2/Unitful.𝐋^2
+
+# Promotion Rules
+Unitful.promote_unit(::S, ::T) where {S<:VesselUnits.AreaUnits, T<:VesselUnits.AreaUnits} = u"inch^2"
+Unitful.promote_unit(::S, ::T) where {S<:VesselUnits.VolumeUnits, T<:VesselUnits.VolumeUnits} = u"inch^3"
+Unitful.promote_unit(::S, ::T) where {S<:VesselUnits.DensityUnits, T<:VesselUnits.DensityUnits} = u"lb/inch^3"
+Unitful.promote_unit(::S, ::T) where {S<:VesselUnits.ForceUnits, T<:VesselUnits.ForceUnits} = u"lbf"
+Unitful.promote_unit(::S, ::T) where {S<:VesselUnits.MomentUnits, T<:VesselUnits.MomentUnits} = u"lbf*ft"
+Unitful.promote_unit(::S, ::T) where {S<:VesselUnits.StressUnits, T<:VesselUnits.StressUnits} = u"ksi"
+const localpromotion = copy(Unitful.promotion)
+function __init__()
+    Unitful.register(VesselUnits)
+    merge!(Unitful.promotion, localpromotion)
+end
 
 end  # module

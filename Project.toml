@@ -7,8 +7,10 @@ authors = ["Nathan Boyer <nathanrobertboyer@gmail.com>"]
 projects = ["test"]
 
 [deps]
-FlexUnits = "76e01b6b-c995-4ce6-8559-91e72a3d4e95"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
-FlexUnits = "0.6.8"
+Reexport = "1.2.2"
+Unitful = "1.29.0"
 julia = "1.12"
