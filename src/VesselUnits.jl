@@ -1,7 +1,7 @@
 """
     Package VesselUnits v$(pkgversion(VesselUnits))
 
-Customized version of FlexUnits.jl for pressure vessel development.
+Customized version of StructuralUnits.jl for pressure vessel development.
 """
 module VesselUnits
 
