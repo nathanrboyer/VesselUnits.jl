@@ -5,7 +5,7 @@ using Test
     # Test names are exported
     @test isdefined(@__MODULE__, :inch)  # constants
     @test isdefined(@__MODULE__, Symbol("@u_str"))  # macros
-    @test isdefined(@__MODULE__, :uconvert)  # functions
+    @test isdefined(@__MODULE__, :ustrip)  # functions
 
     # Test conversions are accurate
     @test 25.4mm == 1inch
