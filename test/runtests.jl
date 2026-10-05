@@ -13,7 +13,7 @@ using Test
     @test 5lb / 2inch^3 == 2.5u"lb/inch^3"
     @test 0°F == 459.67u"Ra"
     @test 0°C ≈ 32°F
-    @test round(ustrip(MPa, 30_000psi), digits=4) === 206.8427
+    @test round(ustrip(MPa, 30_000psi), digits=4) === 206.8427  # Hopefully this syntax improves in the future: https://github.com/Deduction42/FlexUnits.jl/issues/122
 
     #Test simplifications are as expected
     @test string(3lbf / 1inch^2) == "0.003 ksi"
