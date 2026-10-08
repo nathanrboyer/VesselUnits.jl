@@ -17,12 +17,12 @@ include("registry.jl")
 @reexport using .VesselUnitsRegistry
 
 # Define selected units
-const inch = u"inch" # Imperial Length
+const inch = u"in"   # Imperial Length (`in` is already a Julia function)
 const mm = u"mm"     # Metric Length
 const lb = u"lb"     # Imperial Mass
 const kg = u"kg"     # Metric Mass
 const lbf = u"lbf"   # Imperial Force
-# N is too common    # Metric Force
+const Newton = u"N"  # Metric Force (`N` is too common a variable name to take here)
 const °F = u"°F"     # Imperial Temperature
 const Ra = u"Ra"     # Alternate Imperial Temperature
 const °C = u"°C"     # Metric Temperature
@@ -46,6 +46,7 @@ function __init__()
     set_preferred_unit(lbf)
     set_preferred_unit(Ra)  # Using °F would cause errors for temperature differences. See https://github.com/Deduction42/FlexUnits.jl/issues/117#issuecomment-5901423556
     set_preferred_unit(ksi)
+    set_preferred_unit(u"inch^3")
     set_preferred_unit(u"lb/inch^3")
 
     display_simplified_units(true)
