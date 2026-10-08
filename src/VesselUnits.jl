@@ -5,40 +5,18 @@ Customized version of FlexUnits.jl for pressure vessel development.
 """
 module VesselUnits
 
-# Export constants from this package
-export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, MPa, kPa, bar, atm
-export STEEL_DENSITY
+# Export names from this package
+export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, MPa, kPa, bar, atm  # Units
+export STEEL_DENSITY                                                # Constants
+export cylinder_volume, shell_volume, percent_error                 # Functions
 
-# Load and reexport names from FlexUnits.jl
+# Load and reexport names from FlexUnits.jl and the internal custom unit registry
 using Reexport
 @reexport using FlexUnits
-
-# Build internal unit registry with default settings
-module VesselUnitsRegistry
-    using FlexUnits.RegistryTools
-
-    # Define the unit registry as an empty dictionary
-    const UNITS = PermanentDict{Symbol,Units{Dimensions{FixRat32},AffineTransform{Float64}}}()
-
-    # Add default units and register new ones to UNITS dictionary
-    registry_defaults!(UNITS)
-    register_unit!(UNITS, "kip" => 1000 * UNITS[:lbf])
-    register_unit!(UNITS, "ksi" => 1000 * UNITS[:psi])
-    register_unit!(UNITS, "atm" => 101.325 * UNITS[:kPa])
-    register_unit!(UNITS, "mph" => UNITS[:mi] / UNITS[:hr])
-
-    # Set default preferred units
-    const PREFERRED_UNITS = [UNITS[u] for u in [:F, :H, :T, :Ω, :V, :W, :J, :Pa, :N, :C, :L]]
-
-    # Generate simplifiers and exports for defined units with included macros
-    @generate_unit_simplifier(PREFERRED_UNITS)
-    @generate_registry_exports(UNITS)
-end
-
-# Load and reexport names from unit registry
+include("registry.jl")
 @reexport using .VesselUnitsRegistry
 
-# Define selected units in namespace
+# Define selected units
 const inch = u"inch" # Imperial Length
 const mm = u"mm"     # Metric Length
 const lb = u"lb"     # Imperial Mass
@@ -55,8 +33,11 @@ const kPa = u"kPa"   # Alternate Metric Pressure
 const bar = u"bar"   # Alternate Metric Pressure
 const atm = u"atm"   # Alternate Metric Pressure
 
-# Define selected constants in namespace
+# Define selected constants
 const STEEL_DENSITY = 0.28lb/inch^3
+
+# Define selected functions
+include("functions.jl")
 
 # Set preferred units for simplification and turn on automatic simplification when package is loaded
 function __init__()
