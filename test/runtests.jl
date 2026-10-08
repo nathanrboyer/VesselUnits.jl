@@ -36,6 +36,11 @@ end
     @test percent_error(10inch, 11inch, :first) == 10u"%"
     @test percent_error(10inch, 11inch, :second, 4) == -9.0909u"%"
     @test percent_error(10inch, 11inch) == 9.524u"%"
+
+    @test percent_error(100ksi, 101ksi, :min) == 1u"%"
+    @test percent_error(100ksi, 101ksi, :max) == 0.99u"%"
+    @test percent_error(99ksi, 101ksi, :avg) == 2u"%"
+
     @test percent_error(10, 11, :first) == 10u"%"
     @test percent_error(10, 11, :second, 4) == -9.0909u"%"
     @test percent_error(10, 11) == 9.524u"%"
