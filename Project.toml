@@ -1,6 +1,6 @@
 name = "VesselUnits"
 uuid = "26ef9bc7-7236-4902-893f-1b04f64b91ef"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Nathan Boyer <nathanrobertboyer@gmail.com>"]
 
 [workspace]
