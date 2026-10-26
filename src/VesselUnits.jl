@@ -6,9 +6,9 @@ Customized version of FlexUnits.jl for pressure vessel development.
 module VesselUnits
 
 # Export names from this package
-export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, MPa, kPa, bar, atm  # Units
-export STEEL_DENSITY                                                # Constants
-export cylinder_volume, shell_volume, percent_error                 # Functions
+export inch, mm, lb, kg, lbf, °F, °C, psi, ksi, MPa, kPa, bar, atm, °  # Units
+export STEEL_DENSITY                                                   # Constants
+export cylinder_volume, shell_volume, percent_error                    # Functions
 
 # Load and reexport names from FlexUnits.jl and the internal custom unit registry
 using Reexport
@@ -32,6 +32,7 @@ const MPa = u"MPa"   # Metric Pressure
 const kPa = u"kPa"   # Alternate Metric Pressure
 const bar = u"bar"   # Alternate Metric Pressure
 const atm = u"atm"   # Alternate Metric Pressure
+const ° = u"°"       # Degree (angle)
 
 # Define selected constants
 const STEEL_DENSITY = 0.28lb/inch^3

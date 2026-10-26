@@ -15,6 +15,7 @@ end
     @test 0°F == 459.67u"Ra"
     @test 0°C ≈ 32°F
     @test round(MPa, 30_000psi, digits=4) == 206.8427MPa
+    @test 180° == pi * u"rad"
 end
 
 @testset "Simplification Printing" begin
