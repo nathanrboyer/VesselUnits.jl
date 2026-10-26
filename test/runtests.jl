@@ -22,7 +22,7 @@ end
     @test string(STEEL_DENSITY * 1inch^3) == "0.28 lb"
     @test string(5lb / 2inch^3) == "2.5 lb/inch^3"
     @test string(300MPa) == "43.51132131906277 ksi"
-    @test string(25.4mm) == "1.0 inch"
+    @test string(25.4mm) == "1.0 in"
 end
 
 @testset "Volume Functions" begin
